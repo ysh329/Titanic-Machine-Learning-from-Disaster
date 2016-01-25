@@ -124,16 +124,23 @@ def main():
     LRModel = CreateLogisticRegressionModel()
     train_feature_intercept_term_added_tuple_list,\
     test_feature_intercept_term_added_tuple_list = LRModel.add_intercept_term(train_feature_tuple_list = train_normalized_feature_2d_list,\
-                                                                              test_feature_tuple_list = train_normalized_feature_2d_list)
+                                                                              test_feature_tuple_list = test_normalized_feature_2d_list)
     weight_matrix = LRModel.gradient_descent(train_feature_tuple_list = train_feature_intercept_term_added_tuple_list,\
                                              train_label_list = train_label_list,\
-                                             learning_rate = 0.0001,\
-                                             max_iteration_time = 6500)
+                                             learning_rate = 0.1,\
+                                             max_iteration_time = 7000,\
+                                             lambda_regularization = 0.1)
     logging.info("weight_matrix:{0}".format(weight_matrix.tolist()))
-    predict_label_list = LRModel.predict(train_feature_tuple_list = train_feature_intercept_term_added_tuple_list,\
-                                         weight_matrix = weight_matrix)
+    train_predict_label_list = LRModel.predict(train_feature_tuple_list = train_feature_intercept_term_added_tuple_list,\
+                                               weight_matrix = weight_matrix)
     LRModel.accuracy(train_label_list = train_label_list,\
-                     predict_label_list = predict_label_list)
+                     predict_label_list = train_predict_label_list)
+
+    test_predicted_label_list = LRModel.predict(train_feature_tuple_list = test_feature_intercept_term_added_tuple_list,\
+                                                weight_matrix = weight_matrix)
+    LRModel.write_csv_file(start_id = 892,\
+                           predict_label_list = test_predicted_label_list,\
+                           result_csv_dir = "./data/output/LRModel.csv")
 
 ################################ PART4 EXECUTE ##################################
 if __name__ == "__main__":

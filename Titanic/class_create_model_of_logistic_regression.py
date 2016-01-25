@@ -19,6 +19,7 @@ import time
 from math import exp
 import pylab
 from numpy import *
+import csv
 
 
 ################################### PART2 CLASS && FUNCTION ###########################
@@ -162,7 +163,7 @@ class CreateLogisticRegressionModel(object):
 
 
 
-    def gradient_descent(self, train_feature_tuple_list, train_label_list, learning_rate = 0.01, max_iteration_time = 500):
+    def gradient_descent(self, train_feature_tuple_list, train_label_list, learning_rate = 0.01, max_iteration_time = 500, lambda_regularization = 0.1):
         ############################
         # Initial parameters
         # learning_rate = 0.01
@@ -188,12 +189,26 @@ class CreateLogisticRegressionModel(object):
             # [891, 1] <- [891, 7]*[7, 1]
             hypothesis = self.sigmoid_function(train_input_matrix * weight_matrix)
             # real <- sum([891, 1]T*[891, 1] + [891, 1]T*[891, 1])
-            cost = -float(1) / train_sample_num * sum( train_label_matrix.transpose()*log(hypothesis) + (1-train_label_matrix.transpose())*log(1-hypothesis) )
+            cost = -float(1) / (train_sample_num) * \
+                   sum( train_label_matrix.transpose()*log(hypothesis) + (1-train_label_matrix.transpose())*log(1-hypothesis) ) + \
+                   lambda_regularization / (2*train_sample_num) * (array(weight_matrix[1:]) * array(weight_matrix[1:])).sum()
+
             cost_list.append(cost)
+            # [891, 1]
             error = train_label_matrix - hypothesis
             error_list.append(error)
             logging.info("cur_iter:{0}, cost:{1}, sum(error):{2}".format(cur_iter+1, cost, sum(error)))
-            weight_matrix = weight_matrix + learning_rate * train_input_matrix.transpose() * error
+
+            # 1 = 1 + 1 * [891, 1].T *[891, 1]
+            weight_matrix[0] = weight_matrix[0] + learning_rate * (float(1)/train_sample_num) * train_input_matrix[:, 0].transpose() * error
+            # [6, 1] = [6, 1] + 1 * \
+            #           ( 1 / 1 * [891, 6].T * [891, 1]
+            #               )
+            weight_matrix[1:] = weight_matrix[1:] + learning_rate * \
+                                                    ( (float(1)/train_sample_num) * train_input_matrix[:, 1::].transpose() * error - \
+                                                      float(lambda_regularization) / train_sample_num * weight_matrix[1:] \
+                                                      )
+            #weight_matrix = weight_matrix + learning_rate * train_input_matrix.transpose() * error
         #"""
             # find optimal solution
             if cur_iter == 0:
@@ -261,8 +276,8 @@ class CreateLogisticRegressionModel(object):
             global F1
             if len(train_label_list) == len(predict_label_list):
                 # compute precision and recall
-                true_positive_num = 0
-                true_negative_num = 0
+                true_positive_num = 10E-1000
+                true_negative_num = 10E-1000
                 predicted_positive_num = predict_label_list.count(1)
                 predicted_negative_num = predict_label_list.count(0)
 
@@ -288,6 +303,39 @@ class CreateLogisticRegressionModel(object):
         logging.info("precision:{0}".format(precision))
         logging.info("recall:{0}".format(recall))
         logging.info("F1:{0}".format(F1))
+
+        return accuracy, precision, recall, F1
+
+
+
+    def write_csv_file(self, start_id, predict_label_list, result_csv_dir):
+        # open csv file
+        try:
+            result_csv_handle = file(result_csv_dir, 'wb')
+
+            logging.info("Success in attaining file handle of {0}.".format(result_csv_dir))
+        except Exception as e:
+            logging.error("Fail in attaining file handle of {0}.".format(result_csv_dir))
+            logging.error(e)
+            return -1
+
+        # create csv writer
+        result_csv_writer = csv.writer(result_csv_handle)
+
+        # write csv file
+        result_csv_writer.writerow(["PassengerId", "Survived"])
+        for list_idx in xrange(len(predict_label_list)):
+            PassengerId = start_id + list_idx
+            predict_label = predict_label_list[list_idx]
+            result_csv_writer.writerow([PassengerId, predict_label])
+
+        # close csv file
+        try:
+            result_csv_handle.close()
+            logging.info("Success in closing file handle of {0}.".format(result_csv_dir))
+        except Exception as e:
+            logging.error("Fail in closing file handle of {0}.".format(result_csv_dir))
+            logging.error(e)
 
 
 ################################### PART3 CLASS TEST ##################################
