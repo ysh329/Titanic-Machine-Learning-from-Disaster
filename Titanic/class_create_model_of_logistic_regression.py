@@ -169,9 +169,13 @@ class CreateLogisticRegressionModel(object):
         # learning_rate = 0.01
         # max_iteration_time = 500
         ############################
-
+        '''
         train_feature_tuple_list_without_PassengerId = map(lambda (PassengerId, InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare):\
                                                                (InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare),\
+                                                           train_feature_tuple_list)
+        '''
+        train_feature_tuple_list_without_PassengerId = map(lambda (PassengerId, InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare):\
+                                                               (InterceptTerm, Sex, Fare),\
                                                            train_feature_tuple_list)
         # [891, 7]
         train_input_matrix = mat(train_feature_tuple_list_without_PassengerId)
@@ -235,9 +239,15 @@ class CreateLogisticRegressionModel(object):
 
 
     def predict(self, train_feature_tuple_list, weight_matrix):
+        '''
         train_feature_tuple_list_without_PassengerId = map(lambda (PassengerId, InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare):\
                                                                (InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare),\
                                                            train_feature_tuple_list)
+        '''
+        train_feature_tuple_list_without_PassengerId = map(lambda (PassengerId, InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare):\
+                                                               (InterceptTerm, Sex, Fare),\
+                                                           train_feature_tuple_list)
+
         train_input_matrix = mat(train_feature_tuple_list_without_PassengerId)
 
         predict_prob_matrix = self.sigmoid_function(train_input_matrix * weight_matrix)
@@ -273,11 +283,10 @@ class CreateLogisticRegressionModel(object):
             return right_predict_num, accuracy
 
         def compute_precision_and_recall_and_F1(train_label_list, predict_label_list):
-            global F1
             if len(train_label_list) == len(predict_label_list):
                 # compute precision and recall
-                true_positive_num = 10E-1000
-                true_negative_num = 10E-1000
+                true_positive_num = 10E-10
+                true_negative_num = 10E-10
                 predicted_positive_num = predict_label_list.count(1)
                 predicted_negative_num = predict_label_list.count(0)
 
@@ -286,9 +295,8 @@ class CreateLogisticRegressionModel(object):
                         true_positive_num = true_positive_num + 1
                     elif predict_label_list[idx] == train_label_list[idx] == 0:
                         true_negative_num = true_negative_num + 1
-                precision = float(true_positive_num) / predicted_positive_num
-                recall = float(true_negative_num) / predicted_negative_num
-
+                precision = float(true_positive_num) / (predicted_positive_num + 10E-10)
+                recall = float(true_negative_num) / (predicted_negative_num + 10E-10)
                 F1 = 2 * precision * recall / (precision + recall)
 
             return precision, recall, F1
@@ -336,6 +344,11 @@ class CreateLogisticRegressionModel(object):
         except Exception as e:
             logging.error("Fail in closing file handle of {0}.".format(result_csv_dir))
             logging.error(e)
+
+
+
+    def plot_decision_bondary(self, weight_matrix):
+        pass
 
 
 ################################### PART3 CLASS TEST ##################################

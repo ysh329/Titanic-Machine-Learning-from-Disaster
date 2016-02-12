@@ -128,7 +128,7 @@ def main():
     weight_matrix = LRModel.gradient_descent(train_feature_tuple_list = train_feature_intercept_term_added_tuple_list,\
                                              train_label_list = train_label_list,\
                                              learning_rate = 0.1,\
-                                             max_iteration_time = 7000,\
+                                             max_iteration_time = 250,\
                                              lambda_regularization = 0.1)
     logging.info("weight_matrix:{0}".format(weight_matrix.tolist()))
     train_predict_label_list = LRModel.predict(train_feature_tuple_list = train_feature_intercept_term_added_tuple_list,\
