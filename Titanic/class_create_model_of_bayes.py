@@ -16,9 +16,14 @@ __author__ = 'yuens'
 import MySQLdb
 import logging
 import time
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class CreateBayesModel(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -44,7 +49,7 @@ class CreateBayesModel(object):
             logging.error("MySQL Error {error_num}: {error_info}.".format(error_num = e.args[0], error_info = e.args[1]))
 
 
-
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -59,7 +64,7 @@ class CreateBayesModel(object):
         logging.info("The class {class_name} run time is : {delta_time} seconds".format(class_name = CreateBayesModel.__name__, delta_time = self.end - self.start))
 
 
-
+    @Decorator.log_of_function
     def get_data_from_database(self, database_name, passenger_table_name):
         cursor = self.con.cursor()
         sql_list = []
