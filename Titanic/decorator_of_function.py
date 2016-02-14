@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python
 ################################### PART0 DESCRIPTION #################################
-# Filename: class_decorator_of_function.py
+# Filename: decorator_of_function.py
 # Description:
 #
-
 
 # Author: Shuai Yuan
 # E-mail: ysh329@sina.com
@@ -44,27 +43,23 @@ class CreateDecorator(object):
         logging.info("The class {class_name} run time is : {delta_time} seconds".format(class_name = CreateDecorator.__name__, delta_time = self.end - self.start))
 
 
-
     def log_of_function(self, undecorated_function):
-        def record_start_and_end(args, **kw):
+        def record_start_and_end_log(args, **kw):
             logging.info("Function {0} start.".format(undecorated_function.__name__))
-            undecorated_function(args, **kw)
+            n = undecorated_function(args, **kw)
             logging.info("Function {0} end.".format(undecorated_function.__name__))
-        return undecorated_function
+            return n
+        return record_start_and_end_log
 
-
+'''
 Decorator = CreateDecorator()
 @Decorator.log_of_function
-def fun_a():
-    for i in [1,10]:
-        logging.info(i)
-    return i
-
-@Decorator.log_of_function
-def fun_b():
-    logging.info("This is function b.")
-
+def fun_a(n):
+    logging.info("This is {0} from function a.".format(n))
+    return n
+'''''
 ################################### PART3 CLASS TEST ##################################
-
-fun_a()
-fun_b()
+'''
+n = fun_a(11)
+logging.info("n is {0}".format(n))
+'''
