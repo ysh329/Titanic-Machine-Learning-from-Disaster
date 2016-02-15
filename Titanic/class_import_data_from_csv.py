@@ -17,10 +17,14 @@ import MySQLdb
 import logging
 import time
 import csv
-import numpy as np
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class ImportDataToDB(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -47,6 +51,7 @@ class ImportDataToDB(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -62,6 +67,7 @@ class ImportDataToDB(object):
 
 
 
+    @Decorator.log_of_function
     def read_data_from_csv(self, train_data_dir, test_data_dir):
         # sub-function
         def get_list_from_csv_file(data_dir):
@@ -87,6 +93,7 @@ class ImportDataToDB(object):
 
 
 
+    @Decorator.log_of_function
     def sql_generator(self, database_name, passenger_table_name, train_list, test_list):
         def sql_generator_for_list(is_train, data_list, database_name, passenger_table_name):
             sql_list = []
@@ -144,6 +151,7 @@ class ImportDataToDB(object):
 
 
 
+    @Decorator.log_of_function
     def save_data_to_database(self, sql_list):
         cursor = self.con.cursor()
         success_insert = 0

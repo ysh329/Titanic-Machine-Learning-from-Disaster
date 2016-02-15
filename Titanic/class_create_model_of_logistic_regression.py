@@ -16,14 +16,18 @@ __author__ = 'yuens'
 import MySQLdb
 import logging
 import time
-from math import exp
 import pylab
 from numpy import *
+from math import exp
 import csv
-
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class CreateLogisticRegressionModel(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -50,6 +54,7 @@ class CreateLogisticRegressionModel(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -65,6 +70,7 @@ class CreateLogisticRegressionModel(object):
 
 
 
+    @Decorator.log_of_function
     def get_data_from_database(self, database_name, passenger_table_name):
         cursor = self.con.cursor()
         sql_list = []
@@ -128,6 +134,7 @@ class CreateLogisticRegressionModel(object):
 
 
 
+    @Decorator.log_of_function
     def add_intercept_term(self, train_feature_tuple_list, test_feature_tuple_list):
         logging.info("len(train_feature_tuple_list[0]):{0}".format(len(train_feature_tuple_list[0])))
         logging.info("len(train_feature_tuple_list):{0}".format(len(train_feature_tuple_list)))
@@ -158,11 +165,13 @@ class CreateLogisticRegressionModel(object):
 
 
 
+    @Decorator.log_of_function
     def sigmoid_function(self, inX):
         return 1.0 / (1.0 + exp(-inX))
 
 
 
+    @Decorator.log_of_function
     def gradient_descent(self, train_feature_tuple_list, train_label_list, learning_rate = 0.01, max_iteration_time = 500, lambda_regularization = 0.1):
         ############################
         # Initial parameters
@@ -238,6 +247,7 @@ class CreateLogisticRegressionModel(object):
 
 
 
+    @Decorator.log_of_function
     def predict(self, train_feature_tuple_list, weight_matrix):
         '''
         train_feature_tuple_list_without_PassengerId = map(lambda (PassengerId, InterceptTerm, Pclass, Sex, Age, SibSp, Parch, Fare):\
@@ -267,7 +277,7 @@ class CreateLogisticRegressionModel(object):
         return predict_label_list
 
 
-
+    @Decorator.log_of_function
     def accuracy(self, train_label_list, predict_label_list):
         logging.info("len(train_label_list):{0}".format(len(train_label_list)))
         logging.info("len(predict_label_list):{0}".format(len(predict_label_list)))
@@ -315,7 +325,7 @@ class CreateLogisticRegressionModel(object):
         return accuracy, precision, recall, F1
 
 
-
+    @Decorator.log_of_function
     def write_csv_file(self, start_id, predict_label_list, result_csv_dir):
         # open csv file
         try:
@@ -346,7 +356,7 @@ class CreateLogisticRegressionModel(object):
             logging.error(e)
 
 
-
+    @Decorator.log_of_function
     def plot_decision_bondary(self, weight_matrix):
         pass
 

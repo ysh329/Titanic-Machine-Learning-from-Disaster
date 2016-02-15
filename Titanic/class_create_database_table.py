@@ -16,9 +16,14 @@ __author__ = 'yuens'
 import MySQLdb
 import logging
 import time
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class CreateDatabaseTable(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -45,6 +50,7 @@ class CreateDatabaseTable(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -60,6 +66,7 @@ class CreateDatabaseTable(object):
 
 
 
+    @Decorator.log_of_function
     def create_database(self, database_name):
         logging.info("database name: {database_name}".format(database_name = database_name))
 
@@ -83,7 +90,7 @@ class CreateDatabaseTable(object):
         cursor.close()
 
 
-
+    @Decorator.log_of_function
     def create_table(self, database_name, passenger_table_name):
         cursor = self.con.cursor()
         sqls = ["USE {database_name}".format(database_name = database_name), 'SET NAMES UTF8']

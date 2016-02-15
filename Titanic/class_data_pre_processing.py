@@ -17,9 +17,14 @@ import MySQLdb
 import logging
 import time
 from numpy import *
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class DataPreProcess(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -46,6 +51,7 @@ class DataPreProcess(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -61,6 +67,7 @@ class DataPreProcess(object):
 
 
 
+    @Decorator.log_of_function
     def get_data_from_database(self, database_name, passenger_table_name):
         cursor = self.con.cursor()
         sql_list = []
@@ -132,6 +139,9 @@ class DataPreProcess(object):
         logging.info("type(test_data[0]):{0}".format(type(test_data[0])))
         return train_data, test_data
 
+
+
+    @Decorator.log_of_function
     def feature_selection(self, train_data, test_data):
         # PassengerId, Survived, Pclass, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked
         # Select 6 feature
@@ -175,11 +185,13 @@ class DataPreProcess(object):
 
 
 
+    @Decorator.log_of_function
     def feature_extraction(self):
         pass
 
 
 
+    @Decorator.log_of_function
     def feature_transformation(self, train_feature_tuple_list, test_feature_tuple_list):
         # PassengerId, Pclass, Sex, Age, SibSp, Parch, Fare
 
@@ -227,6 +239,8 @@ class DataPreProcess(object):
         return train_transformed_feature_tuple_list, test_transformed_feature_tuple_list
 
 
+
+    @Decorator.log_of_function
     def feature_normalization(self, train_transformed_feature_tuple_list, test_transformed_feature_tuple_list):
         # features: (PassengerId,) Pclass, Sex, Age, SibSp, Parch, Fare
         train_matrix = mat(train_transformed_feature_tuple_list)

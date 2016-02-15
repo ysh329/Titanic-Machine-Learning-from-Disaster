@@ -20,10 +20,15 @@ from math import log
 import operator
 #from numpy import *
 import csv
+import decorator_of_function
 
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class CreateDecisionTreeModel(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -50,6 +55,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -65,6 +71,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def get_data_from_database(self, database_name, passenger_table_name):
         cursor = self.con.cursor()
         sql_list = []
@@ -128,6 +135,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def create_training_data_set(self, train_data, feature_name_list):
         # (PassengerId), Survived, Pclass, Sex, Age, SibSp, Parch
         train_data_tuple_list = map(lambda (PassengerId, Survived, Pclass, Sex, Age, SibSp, Parch):\
@@ -139,6 +147,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def tree_growth(self, train_data_tuple_list, feature_name_list):
 
         logging.info("len(train_data_tuple_list):{0}".format(len(train_data_tuple_list)))
@@ -185,6 +194,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def classify(self, train_data_class_list):
         '''
         find the most in the set
@@ -212,6 +222,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def find_best_split(self, train_data_tuple_list):
         # 特征个数 = 第一个样本的长度减去类
         feature_num = len(train_data_tuple_list[0]) - 1
@@ -248,6 +259,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def split_data_set(self, train_data_tuple_list, best_feature_index, cur_unique_value):
         # 用于训练子树的的子训练集
         retDataSet = []
@@ -264,6 +276,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def calculate_shannon_entropy(self, train_data_tuple_list):
 
         # 这一小段代码和classify函数里计算classCount的函数一样
@@ -302,6 +315,7 @@ class CreateDecisionTreeModel(object):
 
 
 
+    @Decorator.log_of_function
     def predict(tree, newObject):
         # 判断tree是不是dict的实例
         while isinstance(tree, dict):

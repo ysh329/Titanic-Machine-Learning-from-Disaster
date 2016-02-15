@@ -16,8 +16,14 @@ __author__ = 'yuens'
 import logging
 import time
 from pyspark import SparkContext, SparkConf
+import decorator_of_function
+
 ################################### PART2 CLASS && FUNCTION ###########################
 class CreateSpark(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self, pyspark_app_name):
         self.start = time.clock()
 
@@ -47,11 +53,7 @@ class CreateSpark(object):
 
 
 
-    def return_spark_context(self):
-        return self.sc
-
-
-
+    @Decorator.log_of_function
     def __del__(self):
         # Close SparkContext
         try:
@@ -64,6 +66,11 @@ class CreateSpark(object):
         self.end = time.clock()
         logging.info("The class {class_name} run time is : {delta_time} seconds".format(class_name = CreateSpark.__name__, delta_time = self.end))
 
+
+
+    @Decorator.log_of_function
+    def return_spark_context(self):
+        return self.sc
 
 ################################### PART3 CLASS TEST ##################################
 '''

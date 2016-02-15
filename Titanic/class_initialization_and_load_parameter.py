@@ -15,8 +15,14 @@ __author__ = 'yuens'
 import logging
 import ConfigParser
 import time
+import decorator_of_function
+
 ################################### PART2 CLASS && FUNCTION ###########################
 class InitializationAndLoadParameter(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -35,7 +41,7 @@ class InitializationAndLoadParameter(object):
         logging.info("START CLASS {class_name}.".format(class_name = InitializationAndLoadParameter.__name__))
 
 
-
+    @Decorator.log_of_function
     def __del__(self):
         logging.info("Success in quiting MySQL.")
         logging.info("END CLASS {class_name}.".format(class_name = InitializationAndLoadParameter.__name__))
@@ -44,7 +50,7 @@ class InitializationAndLoadParameter(object):
         logging.info("The class {class_name} run time is : {delta_time} seconds".format(class_name = InitializationAndLoadParameter.__name__, delta_time = self.end - self.start))
 
 
-
+    @Decorator.log_of_function
     def load_parameter(self, config_data_dir):
         conf = ConfigParser.ConfigParser()
         conf.read(config_data_dir)

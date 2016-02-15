@@ -18,9 +18,14 @@ import logging
 import time
 import pandas as pd
 import pylab as pl
+import decorator_of_function
 
 ################################### PART2 CLASS && FUNCTION ###########################
 class MetaDataStatistic(object):
+
+    Decorator = decorator_of_function.CreateDecorator()
+
+    @Decorator.log_of_function
     def __init__(self):
         self.start = time.clock()
 
@@ -47,6 +52,7 @@ class MetaDataStatistic(object):
 
 
 
+    @Decorator.log_of_function
     def __del__(self):
         try:
             self.con.close()
@@ -62,6 +68,7 @@ class MetaDataStatistic(object):
 
 
 
+    @Decorator.log_of_function
     def data_summay_from_csv(self, train_data_dir, summary_pic_save_dir, summary_txt_save_dir):
         dataframe = pd.read_csv(train_data_dir)
         # 浏览数据集
