@@ -28,6 +28,7 @@ def main():
     ParameterLoader = InitializationAndLoadParameter()
     train_data_dir, test_data_dir,\
     database_name, passenger_table_name,\
+    test_data_start_id,\
     pyspark_app_name = ParameterLoader.load_parameter(config_data_dir = config_data_dir)
 
 
@@ -114,13 +115,13 @@ def main():
 
 
     # Step5: class_create_model_of_logistic_regression
-    '''
+    """
     #######################################
     # Initial parameters
-    database_name = "TitanicDB"
-    passenger_table_name = "passenger_table"
+    # database_name = "TitanicDB"
+    # passenger_table_name = "passenger_table"
     #######################################
-    '''
+
     LRModel = CreateLogisticRegressionModel()
     train_feature_intercept_term_added_tuple_list,\
     test_feature_intercept_term_added_tuple_list = LRModel.add_intercept_term(train_feature_tuple_list = train_normalized_feature_2d_list,\
@@ -138,9 +139,12 @@ def main():
 
     test_predicted_label_list = LRModel.predict(train_feature_tuple_list = test_feature_intercept_term_added_tuple_list,\
                                                 weight_matrix = weight_matrix)
-    LRModel.write_csv_file(start_id = 892,\
+    LRModel.write_csv_file(start_id = test_data_start_id,\
                            predict_label_list = test_predicted_label_list,\
                            result_csv_dir = "./data/output/LRModel.csv")
+    """
+
+
 
 ################################ PART4 EXECUTE ##################################
 if __name__ == "__main__":
